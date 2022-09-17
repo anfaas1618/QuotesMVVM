@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         setQuote(mainViewModel.prevQuote())
     }
     fun onNext(view: View) {
+
         setQuote(mainViewModel.nextQuote())
     }
     fun onShare(view :View)
