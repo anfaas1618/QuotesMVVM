@@ -1,15 +1,23 @@
 package com.anfaas.myapplication
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import java.nio.charset.Charset
 
 class MainViewModel(val context: Context) : ViewModel() {
     private  var quoteList: Array<Quote> = emptyArray()
-    private var index = 0
+    private var index:Int =0
+    private lateinit var quote:Quote
+    private lateinit var fetchLiveDataObject : MutableLiveData<Quote>
+    val fetchLiveData: LiveData<Quote>
+        get() = fetchLiveDataObject
+
     init {
         quoteList = loadQuoteFromAssets()
+        fetchLiveDataObject = MutableLiveData(quoteList.get(0))
     }
 
     private fun loadQuoteFromAssets(): Array<Quote> {
@@ -31,7 +39,20 @@ class MainViewModel(val context: Context) : ViewModel() {
       return  gson.fromJson(json,Array<Quote>::class.java)
     }
 
-    fun getQuote()  =quoteList[index]
-    fun nextQuote() = quoteList[++index]
-    fun prevQuote() = quoteList[--index]
+     fun updateText()
+    {
+
+        quote = Quote(quoteList[index].text,quoteList[index].author)
+        fetchLiveDataObject.value = quote
+    }
+    fun nextQuote()
+    {
+        index++
+        updateText()
+    }
+    fun prevQuote()
+    {
+        index--
+        updateText()
+    }
 }
